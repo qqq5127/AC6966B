@@ -41,7 +41,7 @@
 
 #define TCFG_DEV_UPDATE_IF_NOFILE_ENABLE								1
 
-#define TCFG_DEV_MANAGER_ENABLE											1
+#define TCFG_DEV_MANAGER_ENABLE											0
 
 #define SD_BAUD_RATE_CHANGE_WHEN_SCAN                                   (12000000L)
 

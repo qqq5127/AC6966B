@@ -114,11 +114,7 @@ void app_main()
         vbat_check_init();
 #endif
 
-#ifndef  PC_POWER_ON_CHARGE
-        app_curr_task = APP_IDLE_TASK;
-#else
-        app_curr_task = APP_POWERON_TASK;
-#endif
+        app_curr_task = APP_BT_TASK;
     } else {
 #if SOUNDCARD_ENABLE
         soundcard_peripheral_init();
@@ -130,9 +126,9 @@ void app_main()
 #endif
 
         /* endless_loop_debug_int(); */
-        ui_update_status(STATUS_POWERON);
+        ui_update_status(STATUS_POWEROFF);
 
-        app_curr_task = APP_POWERON_TASK;
+        app_curr_task = APP_POWEROFF_TASK;
     }
 
 #if TCFG_CHARGE_BOX_ENABLE

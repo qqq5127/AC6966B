@@ -18,6 +18,7 @@
 #define     KEY_VOLUME_DEC      10
 #define     KEY_VOLUME_INC      11
 #define     KEY_PHONE           12
+#define     KEY_PAIR            13
 
 
 #define  	KEY_LEFT 			37

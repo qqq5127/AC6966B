@@ -201,6 +201,7 @@ static void poweroff_done(void)
         power_set_soft_poweroff();
     }
 #else
+
     power_set_soft_poweroff();
 #endif
 }
@@ -225,7 +226,8 @@ void poweroff_tone_end(void *priv, int flag)
 static void poweroff_app_start()
 {
     int ret = false;
-    if (app_var.goto_poweroff_flag) {
+    if (app_var.goto_poweroff_flag)
+			{
         UI_SHOW_WINDOW(ID_WINDOW_POWER_OFF);
         syscfg_write(CFG_MUSIC_VOL, &app_var.music_volume, 1);
         os_taskq_flush();
@@ -236,7 +238,7 @@ static void poweroff_app_start()
             poweroff_done();
         } else
 #endif/*CONFIG_TWS_POWEROFF_SAME_TIME*/
-        {
+        {        
             ret = tone_play_with_callback_by_name(tone_table[IDEX_TONE_POWER_OFF], 1,
                                                   poweroff_tone_end, (void *)IDEX_TONE_POWER_OFF);
             if (ret) {
@@ -264,6 +266,7 @@ void app_poweroff_task()
 
         switch (msg[0]) {
         case APP_MSG_SYS_EVENT:
+						
             if (poweroff_sys_event_handler((struct sys_event *)(&msg[1])) == false) {
                 app_default_event_deal((struct sys_event *)(&msg[1]));    //由common统一处理
             }
@@ -277,6 +280,8 @@ void app_poweroff_task()
             return;
         } */
     }
+		
+		log_info("app_poweroff_task exit\n");
 }
 
 extern void sdx_dev_entry_lowpower(const char *sdx_name);

@@ -164,6 +164,8 @@ static void app_init()
     /* clock_add_set(CHARGE_BOX_CLK); */
     chgbox_init_app();
 #endif
+
+	
 }
 
 static void app_task_handler(void *p)

@@ -489,8 +489,9 @@ void app_idle_task()
     int res;
     int msg[32];
 
+		log_info("idle start 1");
     idle_app_start();
-
+		log_info("idle start 2");
     while (1) {
         app_task_get_msg(msg, ARRAY_SIZE(msg), 1);
 
@@ -509,5 +510,6 @@ void app_idle_task()
             return;
         }
     }
+		log_info("idle end");
 }
 

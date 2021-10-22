@@ -353,6 +353,8 @@ static void smartbox_bt_tws_event_handler(struct bt_event *bt)
 
 int sys_event_handler_specific(struct sys_event *event)
 {
+	log_info("sys_event_handler_specific %d\n",event->type);
+
     switch (event->type) {
     case SYS_BT_EVENT:
         if ((u32)event->arg == SYS_BT_EVENT_TYPE_CON_STATUS) {

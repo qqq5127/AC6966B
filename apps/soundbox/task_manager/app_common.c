@@ -476,6 +476,8 @@ void app_default_event_deal(struct sys_event *event)
 {
     int ret;
     SYS_EVENT_HANDLER_SPECIFIC(event);
+		
+		log_info("app_default_event_deal %d\n",event->type);
     switch (event->type) {
     case SYS_DEVICE_EVENT:
         /*默认公共设备事件处理*/

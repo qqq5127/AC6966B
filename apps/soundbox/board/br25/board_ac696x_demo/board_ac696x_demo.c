@@ -479,13 +479,17 @@ LED_PLATFORM_DATA_END()
 #if TCFG_UI_LED7_ENABLE
 LED7_PLATFORM_DATA_BEGIN(led7_data)
 	.pin_type = LED7_PIN7,
-    .pin_cfg.pin7.pin[0] = IO_PORTC_01,
-    .pin_cfg.pin7.pin[1] = IO_PORTC_02,
-    .pin_cfg.pin7.pin[2] = IO_PORTC_03,
-    .pin_cfg.pin7.pin[3] = IO_PORTC_04,
-    .pin_cfg.pin7.pin[4] = IO_PORTC_05,
-    .pin_cfg.pin7.pin[5] = IO_PORTB_06,
-    .pin_cfg.pin7.pin[6] = IO_PORTB_07,
+    .pin_cfg.pin7.pin[0] = IO_PORTC_04,
+#if TCFG_UART0_ENABLE    
+    .pin_cfg.pin7.pin[1] = IO_PORTB_00,	//IO_PORTB_00  IO_PORTC_03
+#else
+		.pin_cfg.pin7.pin[1] = IO_PORTC_03, //IO_PORTB_00  IO_PORTC_03
+#endif
+    .pin_cfg.pin7.pin[2] = IO_PORTC_02,	
+    .pin_cfg.pin7.pin[3] = IO_PORTA_06,
+    .pin_cfg.pin7.pin[4] = IO_PORTA_05,
+    .pin_cfg.pin7.pin[5] = IO_PORTA_04,
+    .pin_cfg.pin7.pin[6] = IO_PORTA_03,
 LED7_PLATFORM_DATA_END()
 
 const struct ui_devices_cfg ui_cfg_data = {
@@ -855,6 +859,7 @@ static void board_devices_init(void)
 #if TCFG_PWMLED_ENABLE
     ui_pwm_led_init(&pwm_led_data);
 #endif
+		log_info("board_devices_init : 1");
 
 #if (TCFG_IOKEY_ENABLE || TCFG_ADKEY_ENABLE || TCFG_IRKEY_ENABLE || TCFG_RDEC_KEY_ENABLE ||  TCFG_CTMU_TOUCH_KEY_ENABLE)
 
@@ -894,6 +899,7 @@ void board_init()
     if (!get_charge_online_flag()) {
         check_power_on_voltage();
     }
+    log_info("board_init : 2");
 
 /* #if (TCFG_SD0_ENABLE || TCFG_SD1_ENABLE) */
 	/* sdpg_config(1); */
@@ -902,27 +908,35 @@ void board_init()
 #if TCFG_FM_ENABLE
 	fm_dev_init(&fm_dev_data);
 #endif
+		log_info("board_init : 3");
 
 #if TCFG_NOR_REC
     nor_fs_ops_init();
 #endif
 
+		log_info("board_init : 4");
+
 #if TCFG_NOR_FS
     init_norsdfile_hdl();
 #endif
+		log_info("board_init : 5");
 
 #if FLASH_INSIDE_REC_ENABLE
     sdfile_rec_ops_init();
 #endif
+		log_info("board_init : 6");
 
 	dev_manager_init();
 	board_devices_init();
+
+		log_info("board_init : 7");
 
 	if(get_charge_online_flag()){
     	power_set_mode(PWR_LDO15);
 	}else{
     	power_set_mode(TCFG_LOWPOWER_POWER_SEL);
 	}
+	log_info("board_init : 8");
 
     //针对硅mic要输出1给mic供电(按实际使用情况配置)
     /* if(!adc_data.mic_capless){ */
@@ -941,11 +955,13 @@ void board_init()
 #ifdef AUDIO_PCM_DEBUG
 	uartSendInit();
 #endif
+log_info("board_init : 9");
 
 #if TCFG_RTC_ENABLE
     alarm_init();
 #endif
 
+log_info("board_init : 10");
 
 
 }
@@ -957,6 +973,8 @@ void board_set_soft_poweroff(void)
 {
     u32 porta_value = 0xffff;
     u32 portb_value = 0xfffe;
+
+		log_info("board_set_soft_poweroff");
 
     gpio_write(MIC_HW_IO, 0);
 
