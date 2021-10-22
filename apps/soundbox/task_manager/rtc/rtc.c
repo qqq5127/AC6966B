@@ -645,6 +645,8 @@ static void  rtc_tone_play_end_callback(void *priv, int flag)
     switch (index) {
     case IDEX_TONE_RTC:
         ///提示音播放结束， 启动播放器播放
+				set_pa_mode(0);
+
         break;
     default:
         break;
@@ -662,12 +664,15 @@ void app_rtc_task()
 {
     int res;
     int msg[32];
+
+		
 #if (SMART_BOX_EN)
     extern u8 smartbox_rtc_ring_tone(void);
     if (smartbox_rtc_ring_tone()) {
         tone_play_with_callback_by_name(tone_table[IDEX_TONE_RTC], 1, rtc_tone_play_end_callback, (void *)IDEX_TONE_RTC);
     }
 #else
+		set_pa_mode(2);
     tone_play_with_callback_by_name(tone_table[IDEX_TONE_RTC], 1, rtc_tone_play_end_callback, (void *)IDEX_TONE_RTC);
 #endif
     rtc_task_start();

@@ -881,11 +881,24 @@ static void board_devices_init(void)
 	return;
 }
 
+
+#ifdef	SD_POWER_PIN	//cuixu add
+extern void set_sd_vdd_power(void);
+#endif
+#ifdef PA_CONTROL_PIN
+extern void init_pa_mode(void);
+#endif
+
+
 void uartSendInit();
 extern void alarm_init();
 extern void cfg_file_parse(u8 idx);
 void board_init()
 {
+#ifdef PA_CONTROL_PIN
+			init_pa_mode();
+#endif
+
     board_power_init();
     adc_vbg_init();
     adc_init();
@@ -1106,5 +1119,64 @@ static void board_power_wakeup_init(void)
     }
 #endif
 }
+
+
+#ifdef PA_CONTROL_PIN
+static void init_pa_mode(void)
+{
+	gpio_set_direction(PA_CONTROL_PIN, 0);
+	gpio_set_pull_down(PA_CONTROL_PIN,0);
+	gpio_set_pull_up(PA_CONTROL_PIN,0);
+	gpio_set_die(PA_CONTROL_PIN, 0);
+	gpio_direction_output(PA_CONTROL_PIN, 0);
+#ifdef PA_AB_D_CONTROL_PIN
+	gpio_set_direction(PA_AB_D_CONTROL_PIN, 0);
+	gpio_set_pull_down(PA_AB_D_CONTROL_PIN,0);
+	gpio_set_pull_up(PA_AB_D_CONTROL_PIN,0);
+	gpio_set_die(PA_AB_D_CONTROL_PIN, 0);
+	gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
+#endif	
+}
+
+
+/*
+
+mode 0: mute
+mode 1: AB
+mode 2: D
+*/
+
+void set_pa_mode(u8 mode)
+{
+	switch(mode)
+	{
+		case 0:
+			gpio_direction_output(PA_CONTROL_PIN, 0);
+#ifdef PA_AB_D_CONTROL_PIN
+			gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
+#endif 
+		break;
+
+		case 1:
+			gpio_direction_output(PA_CONTROL_PIN, 1);
+#ifdef PA_AB_D_CONTROL_PIN
+			gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
+#endif
+		break;
+
+#ifdef PA_AB_D_CONTROL_PIN
+		case 2:
+			gpio_direction_output(PA_CONTROL_PIN, 0);
+		  gpio_direction_output(PA_AB_D_CONTROL_PIN, 1);
+		break;
+#endif
+		default:
+
+		break;
+	}
+}
+#endif
+
+
 early_initcall(board_power_wakeup_init);
 #endif /* #ifdef CONFIG_BOARD_AC696X_DEMO */

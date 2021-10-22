@@ -492,6 +492,9 @@ void app_idle_task()
 		log_info("idle start 1");
     idle_app_start();
 		log_info("idle start 2");
+
+		set_pa_mode(0);
+		
     while (1) {
         app_task_get_msg(msg, ARRAY_SIZE(msg), 1);
 

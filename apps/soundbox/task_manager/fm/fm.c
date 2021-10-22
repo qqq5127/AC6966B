@@ -237,6 +237,7 @@ void app_fm_task()
     if (fm_close_bt() != 0) {
         return;
     }*/
+		set_pa_mode(1);
     fm_app_init();
 #if TCFG_DEC2TWS_ENABLE
     extern void set_tws_background_connected_flag(u8 flag);

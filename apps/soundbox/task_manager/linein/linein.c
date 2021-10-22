@@ -306,6 +306,7 @@ void app_linein_task()
              linein_bt_back_flag, linein_last_onoff);
 
     linein_app_init();//初始化时钟和开启ui
+		set_pa_mode(2);
 
 #if TCFG_DEC2TWS_ENABLE
     extern void set_tws_background_connected_flag(u8 flag);

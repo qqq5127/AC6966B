@@ -933,6 +933,8 @@ DAC硬件上的连接方式,可选的配置：
 #define TCFG_AUDIO_DEC_OUT_TASK				0	// 解码使用单独任务做输出
 #endif
 
+#define	PA_CONTROL_PIN	IO_PORTA_00
+#define	PA_AB_D_CONTROL_PIN	IO_PORTB_04
 
 
 //*********************************************************************************//
