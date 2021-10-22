@@ -154,11 +154,11 @@ static int poweroff_sys_event_handler(struct sys_event *event)
     case SYS_KEY_EVENT:
         return true;
     case SYS_BT_EVENT:
-        return true;
+        return false;
     case SYS_DEVICE_EVENT:
-        return true;
+        return false;
     default:
-        return true;
+        return false;
     }
 }
 
@@ -261,12 +261,13 @@ void app_poweroff_task()
     int res;
     int msg[32];
     poweroff_app_start();
+		log_info("app_poweroff_task 1");
     while (1) {
         app_task_get_msg(msg, ARRAY_SIZE(msg), 1);
-
+				log_info("app_poweroff_task msg %d",msg);
         switch (msg[0]) {
         case APP_MSG_SYS_EVENT:
-						
+					log_info("app_poweroff_task 2");
             if (poweroff_sys_event_handler((struct sys_event *)(&msg[1])) == false) {
                 app_default_event_deal((struct sys_event *)(&msg[1]));    //由common统一处理
             }

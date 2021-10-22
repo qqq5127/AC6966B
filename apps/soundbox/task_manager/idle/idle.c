@@ -246,7 +246,7 @@ static void idle_key_poweron_deal(u8 step)
         goto_poweron_cnt = 0;
         goto_poweron_flag = 1;
         break;
-    case 1:
+    case 2:
         log_info("poweron flag:%d cnt:%d\n", goto_poweron_flag, goto_poweron_cnt);
         if (goto_poweron_flag) {
             goto_poweron_cnt++;

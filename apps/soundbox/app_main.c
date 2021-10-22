@@ -128,7 +128,7 @@ void app_main()
         /* endless_loop_debug_int(); */
         ui_update_status(STATUS_POWEROFF);
 
-        app_curr_task = APP_POWEROFF_TASK;
+        app_curr_task = APP_IDLE_TASK;
     }
 
 #if TCFG_CHARGE_BOX_ENABLE

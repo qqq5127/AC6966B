@@ -342,6 +342,7 @@ int app_power_user_event_handler(struct device_event *dev)
 
 static void app_common_device_event_handler(struct sys_event *event)
 {
+#if 0
     int ret = 0;
     const char *logo = NULL;
     const char *usb_msg = NULL;
@@ -468,6 +469,7 @@ static void app_common_device_event_handler(struct sys_event *event)
             }
         }
     }
+#endif
 }
 
 
@@ -499,6 +501,8 @@ void app_default_event_deal(struct sys_event *event)
         printf("unknow event\n");
         break;
     }
+		
+		log_info("app_default_event_deal end\n");
 }
 
 
