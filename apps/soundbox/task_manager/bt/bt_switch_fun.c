@@ -843,7 +843,11 @@ void bt_task_init()
 {
     clock_idle(BT_IDLE_CLOCK);
     u32 sys_clk =  clk_get("sys");
+
+		log_info("bt_task_init 1");
+		
     bt_pll_para(TCFG_CLOCK_OSC_HZ, sys_clk, 0, 0);
+		log_info("bt_task_init 2");
 
     __this->ignore_discon_tone = 0;
     __this->exiting = 0;
@@ -851,8 +855,10 @@ void bt_task_init()
     __this->force_poweroff  = 0 ;
     __this->init_start = 0;//蓝牙协议栈已经开始初始化标志位
 
+		log_info("bt_task_init 3");
     UI_SHOW_WINDOW(ID_WINDOW_BT);
     UI_SHOW_MENU(MENU_BT, 1000, 0, NULL);
+		log_info("bt_task_init 4");
 
 #if TCFG_BLUETOOTH_BACK_MODE
     if (__this->init_ok) {

@@ -41,7 +41,7 @@
 //*********************************************************************************//
 //                                 UART配置                                        //
 //*********************************************************************************//
-#define TCFG_UART0_ENABLE					ENABLE_THIS_MOUDLE                     //串口打印模块使能
+#define TCFG_UART0_ENABLE					DISABLE_THIS_MOUDLE                     //串口打印模块使能
 #define TCFG_UART0_RX_PORT					NO_CONFIG_PORT                         //串口接收脚配置（用于打印可以选择NO_CONFIG_PORT）
 #define TCFG_UART0_TX_PORT  				IO_PORTC_03  //IO_PORTC_03 IO_PORTB_00                          //串口发送脚配置
 #define TCFG_UART0_BAUDRATE  				1000000                                //串口波特率配置
@@ -431,7 +431,7 @@ DAC硬件上的连接方式,可选的配置：
 //每个解码通道都开启数字音量管理,音量类型为VOL_TYPE_DIGGROUP时要使能
 #define SYS_DIGVOL_GROUP_EN     DISABLE
 
-#define SYS_VOL_TYPE            VOL_TYPE_ANALOG
+#define SYS_VOL_TYPE            VOL_TYPE_AD
 
 #if  (SYS_VOL_TYPE == VOL_TYPE_DIGGROUP)
 #undef SYS_DIGVOL_GROUP_EN

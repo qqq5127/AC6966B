@@ -342,7 +342,7 @@ int app_power_user_event_handler(struct device_event *dev)
 
 static void app_common_device_event_handler(struct sys_event *event)
 {
-#if 0
+#if 1
     int ret = 0;
     const char *logo = NULL;
     const char *usb_msg = NULL;

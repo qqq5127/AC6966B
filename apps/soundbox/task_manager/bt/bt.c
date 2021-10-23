@@ -595,7 +595,7 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
         break;
     case BT_STATUS_AVRCP_INCOME_OPID:
         log_info("  BT_STATUS_AVRCP_INCOME_OPID \n");
-        bt_status_avrcp_income_opid(bt);
+        bt_status_avrcp_income_opid(bt);		
         break;
     case  BT_STATUS_RECONN_OR_CONN:
         log_info("  BT_STATUS_RECONN_OR_CONN \n");
@@ -933,6 +933,15 @@ int bt_key_event_handler(struct sys_event *event)
     }
 
     switch (key_event) {
+			case KEY_BT_PAIR:
+					if ((BT_STATUS_CONNECTING == get_bt_connect_status()) 	||
+							(BT_STATUS_TAKEING_PHONE == get_bt_connect_status()) ||
+							(BT_STATUS_PLAYING_MUSIC == get_bt_connect_status())) { /*连接状态*/
+							puts("bt_disconnect\n");/*手动断开连接*/
+							user_send_cmd_prepare(USER_CTRL_DISCONNECTION_HCI, 0, NULL);
+					}
+
+				break;
 
     case  KEY_MUSIC_PP:
         log_info("   KEY_MUSIC_PP  \n");
@@ -1145,7 +1154,9 @@ void app_bt_task()
     int msg[32];
     ui_update_status(STATUS_EXIT_LOWPOWER);
 
+		log_info("app_bt_task 1");
     bt_task_init();//初始化变量、时钟、显示(未进行协议栈初始化)
+		log_info("app_bt_task 2");
 
 #if TCFG_TONE2TWS_ENABLE
     extern void tone2tws_bt_task_start(u8 tone_play);
@@ -1174,6 +1185,7 @@ void app_bt_task()
         }
     }
 #endif
+		log_info("app_bt_task 4");
 
     while (1) {
         app_task_get_msg(msg, ARRAY_SIZE(msg), 1);

@@ -6,9 +6,9 @@
 #define AT_LED_CONST             AT(.LED_const)
 //LED7真值表选择
 //7脚LED7
-// #define UI_LED7_PIN7_TRUE_TABLE1
+#define UI_LED7_PIN7_TRUE_TABLE1
 //#define UI_LED7_PIN7_TRUE_TABLE2
-#define UI_LED7_PIN7_TRUE_TABLE3
+//#define UI_LED7_PIN7_TRUE_TABLE3
 
 //12脚LED7
 //#define UI_LED7_PIN12_TRUE_TABLE1
@@ -69,11 +69,11 @@ static const struct seg2pin led7_digit_seg2pin[28] = {
 AT_LED_CONST
 static const struct icon_seg2pin led7_icon_seg2pin[] = {
     //icon       pinH, pinL
-    {LED7_CHARGE, 	{6, 0}},
-    {LED7_USB, 	  	{0, 4}},
-    {LED7_SD, 	  	{5, 1}},
-    {LED7_BT, 	  	{6, 1}}, //BT
-    {LED7_REPEAT, 	{6, 3}}, //REPEAT
+    {LED7_FM, 			{2, 5}},
+    {LED7_ALM, 	  	{0, 5}},
+    {LED7_BT, 	  	{5, 1}},
+    {LED_BATTERY_NORMAL, 	  	{2, 6}}, //BT
+    {LED_BATTERY_LOW, 	{0, 4}}, //REPEAT
     {LED7_2POINT, 	{2, 3}}, //:
     {LED7_DOT, 		{6, 4}} //.
 };

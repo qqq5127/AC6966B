@@ -42,6 +42,22 @@ static void led7_show_rtc_string(void *hd, const char *buf)
     dis->clear();
     dis->setXY(0, 0);
     dis->show_string((u8 *)buf);
+		{ 	
+					extern bool rtc_ui_get_alarm_status(void);
+		
+					
+					bool alarm_status;
+					alarm_status =	rtc_ui_get_alarm_status();
+					if(alarm_status)
+					{
+						dis->show_icon(LED7_ALM);
+					}
+					else
+					{
+						dis->flash_icon(LED7_ALM);
+					}
+		}
+    dis->show_icon(LED_BATTERY_NORMAL);		
     dis->lock(0);
 }
 
@@ -71,6 +87,24 @@ static void ui_led7_show_curtime(void *hd, u8 Hour, u8 Min)
     dis->Clear_FlashChar(BIT(0) | BIT(1) | BIT(2) | BIT(3));
     dis->show_string(tmp_buf);
     dis->flash_icon(LED7_2POINT);
+
+    {		
+			extern bool rtc_ui_get_alarm_status(void);
+
+			
+	    bool alarm_status;
+			alarm_status = 	rtc_ui_get_alarm_status();
+			if(alarm_status)
+			{
+				dis->show_icon(LED7_ALM);
+			}
+			else
+			{
+				dis->flash_icon(LED7_ALM);
+			}
+		}
+    dis->show_icon(LED_BATTERY_NORMAL);
+		
     dis->lock(0);
 }
 
@@ -88,6 +122,11 @@ static void ui_led7_show_RTC_time(void *hd, u8 Hour, u8 Min)
     dis->show_string(tmp_buf);
     dis->show_icon(LED7_2POINT);
     dis->lock(0);
+}
+
+static void ui_led7_show_status(void)
+{
+
 }
 
 static void ui_led7_show_date(void *hd, u16 Year, u8 Month, u8 Day)
@@ -248,6 +287,7 @@ static void ui_rtc_main(void *hd, void *private) //主界面显示
            current_time.sec);
 #endif
     ui_led7_show_curtime(hd, current_time.hour, current_time.min);
+
 }
 
 
@@ -264,6 +304,11 @@ static int ui_rtc_user(void *hd, void *private, u8 menu, u32 arg)//子界面显�
     case MENU_RTC_SET:
         ui_led7_show_RTC_user(hd, &(__this->ui_rtc));
         break;
+		case MENU_ALM_STATUS:
+				//ui_led7_show_date
+				ui_led7_show_status();
+				break;
+				
     default:
         ret = false;
         break;

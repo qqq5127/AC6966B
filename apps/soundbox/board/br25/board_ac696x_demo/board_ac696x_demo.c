@@ -1128,7 +1128,7 @@ static void init_pa_mode(void)
 	gpio_set_pull_down(PA_CONTROL_PIN,0);
 	gpio_set_pull_up(PA_CONTROL_PIN,0);
 	gpio_set_die(PA_CONTROL_PIN, 0);
-	gpio_direction_output(PA_CONTROL_PIN, 0);
+	gpio_direction_output(PA_CONTROL_PIN, 1);
 #ifdef PA_AB_D_CONTROL_PIN
 	gpio_set_direction(PA_AB_D_CONTROL_PIN, 0);
 	gpio_set_pull_down(PA_AB_D_CONTROL_PIN,0);
@@ -1151,14 +1151,14 @@ void set_pa_mode(u8 mode)
 	switch(mode)
 	{
 		case 0:
-			gpio_direction_output(PA_CONTROL_PIN, 0);
+			gpio_direction_output(PA_CONTROL_PIN, 1);
 #ifdef PA_AB_D_CONTROL_PIN
-			gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
+			//gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
 #endif 
 		break;
 
 		case 1:
-			gpio_direction_output(PA_CONTROL_PIN, 1);
+			gpio_direction_output(PA_CONTROL_PIN, 0);
 #ifdef PA_AB_D_CONTROL_PIN
 			gpio_direction_output(PA_AB_D_CONTROL_PIN, 0);
 #endif

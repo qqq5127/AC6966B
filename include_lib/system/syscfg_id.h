@@ -206,6 +206,7 @@ u8 *syscfg_ptr_read(u16 item_id, u16 *len);
 #define    	CFG_ANC_ID   	            610
 
 //其它类配置项[651 ~ 700]
+
 #define 	CFG_STORE_BIN_ONLY_END		700
 
 

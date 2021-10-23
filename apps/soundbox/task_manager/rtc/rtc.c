@@ -37,7 +37,7 @@
 #define RTC_SET_MODE  0x55
 #define ALM_SET_MODE  0xAA
 
-#define RTC_POS_DEFAULT      RTC_POS_YEAR
+#define RTC_POS_DEFAULT      RTC_POS_HOUR
 #define RTC_ALM_POS_DEFAULT  ALM_POS_HOUR
 #define RTC_MODE_DEFAULT     RTC_SET_MODE
 
@@ -55,7 +55,7 @@ enum {
     RTC_POS_MAX,
     ALM_POS_HOUR,
     ALM_POS_MIN,
-    ALM_POS_ENABLE,
+		ALM_POS_ENABLE,
     ALM_POS_MAX,
 };
 
@@ -73,10 +73,18 @@ static struct rtc_opr *__this = NULL;
 
 
 const char *alm_string[] =  {" AL ", " ON ", " OFF"};
-const char *alm_select[] =  {"AL-1", "AL-2", "AL-3", "AL-4", "AL-5"};
+const char *alm_select[] =  {"AL-1"};
 
+bool rtc_ui_get_alarm_status(void)
+{
+		T_ALARM alarm = {0};
 
-
+		if (alarm_get_info(&alarm, 0) != 0)
+		{
+			return false;
+		}
+    return alarm.sw;
+}
 
 static void ui_set_rtc_timeout(u8 menu)
 {
@@ -189,17 +197,42 @@ static void set_rtc_pos()
 
     case ALM_SET_MODE:
         if (__this->rtc_pos == RTC_POS_NULL) {
-            __this->rtc_pos = RTC_ALM_POS_DEFAULT;
+						struct sys_time current_time;
+            __this->rtc_pos = ALM_POS_ENABLE;
             if (alarm_get_info(&alarm, __this->alm_num) != 0) {
                 log_error("alarm_get_info \n");
-            }
+								
+								__this->set_time.hour = 18;
+								__this->set_time.min = 18;
+								__this->set_time.sec = 0;
+								__this->alm_enable = 1;
 
-            __this->set_time.hour = alarm.time.hour;
-            __this->set_time.min = alarm.time.min;
-            __this->alm_enable = alarm.sw;
+            }
+						else
+						{
+							__this->set_time.hour = alarm.time.hour;
+							__this->set_time.min = alarm.time.min;
+							__this->set_time.sec = 0;
+							__this->alm_enable = 1;
+
+						}
+
 
         } else {
-            __this->rtc_pos++;
+            //__this->rtc_pos++;
+            if (__this->rtc_pos == ALM_POS_ENABLE)
+            {
+							__this->rtc_pos = ALM_POS_HOUR;
+						}
+            else if (__this->rtc_pos == ALM_POS_HOUR)
+            {
+							__this->rtc_pos = ALM_POS_MIN;	
+						}
+            else if (__this->alm_enable == false || __this->rtc_pos == ALM_POS_MIN)
+            {
+							__this->rtc_pos = ALM_POS_MAX;
+						}
+						
             if (__this->rtc_pos == ALM_POS_MAX) {
                 __this->rtc_pos = RTC_POS_NULL;
                 alarm.time.hour = __this->set_time.hour;
@@ -546,6 +579,7 @@ static int rtc_key_event_opr(struct sys_event *event)
 {
     int ret = true;
     int err = 0;
+    struct ui_rtc_display *rtc = rtc_ui_get_display_buf();
 
 #if (TCFG_SPI_LCD_ENABLE)
     extern int key_is_ui_takeover();
@@ -561,6 +595,32 @@ static int rtc_key_event_opr(struct sys_event *event)
 
     if (__this && __this->dev_handle) {
         switch (key_event) {
+				case KEY_RTC_STATUS:
+						if(__this->rtc_set_mode == ALM_SET_MODE || __this->rtc_pos != RTC_POS_NULL)
+						{
+							set_rtc_pos();
+
+						}
+
+						else
+						{
+							rtc->rtc_menu = UI_RTC_ACTION_STRING_SET;
+							if (__this->alm_enable) {
+									rtc->str = "A ON";
+							} else {
+									rtc->str = "AOFF";
+							}
+							
+							UI_SHOW_MENU(MENU_RTC_SET, 2 * 1000, 0, NULL);
+						}
+
+						//UI_SHOW_MENU(MENU_RTC_SET, 10 * 1000, 0, ui_set_rtc_timeout);
+						
+						break;
+				case KEY_RTC_SET_ALARM:
+					  __this->rtc_set_mode = ALM_SET_MODE; 
+						set_rtc_pos();
+						break;
         case KEY_RTC_UP:
             log_info("KEY_RTC_UP \n");
             set_rtc_up();

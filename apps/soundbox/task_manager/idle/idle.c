@@ -259,7 +259,14 @@ static void idle_key_poweron_deal(u8 step)
 #endif
 
 #if TWFG_APP_POWERON_IGNORE_DEV
-                app_task_switch_to(APP_POWERON_TASK);
+								if(app_prev_task == APP_BT_TASK || app_prev_task == APP_RTC_TASK || app_prev_task == APP_FM_TASK)
+								{
+									app_task_switch_to(app_prev_task);
+								}
+								else
+								{
+									app_task_switch_to(APP_BT_TASK);
+								}
 #endif
             }
         }
@@ -484,14 +491,48 @@ static void idle_app_start()
   @note
  */
 /*----------------------------------------------------------------------------*/
+
 void app_idle_task()
 {
     int res;
     int msg[32];
+		static bool first_flag = true;
 
 		log_info("idle start 1");
     idle_app_start();
 		log_info("idle start 2");
+
+		if(!first_flag)
+		{		
+			extern void delay_2ms(int cnt);
+
+			UI_SHOW_MENU(MENU_POWER, 0, 0, NULL);
+			if(app_prev_task == APP_BT_TASK || app_prev_task == APP_RTC_TASK || app_prev_task == APP_FM_TASK)
+			{
+      	syscfg_write(CFG_SYS_VOL, &app_prev_task, 1);
+			}
+			else
+			{
+				u8 bt_mode_temp;
+
+				bt_mode_temp = APP_BT_TASK;	
+      	syscfg_write(CFG_SYS_VOL, &bt_mode_temp, 1);
+			}
+			
+			os_taskq_flush();
+
+			delay2ms(1000);			
+			UI_SHOW_MENU(MENU_POWER_UP, 0, 0, NULL);
+			log_info("idle wirte mode %d",app_prev_task);
+		}
+		else
+		{
+			syscfg_read(CFG_SYS_VOL, &app_prev_task, 1);
+
+			log_info("idle read mode %d",app_prev_task);
+		}
+		
+		first_flag = false;
 
 		set_pa_mode(0);
 		

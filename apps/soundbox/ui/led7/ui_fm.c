@@ -49,6 +49,20 @@ static void led7_fm_show_freq(void *hd, u32 arg)
     dis->show_icon(LED7_DOT);
     dis->show_icon(LED7_FM);
     dis->lock(0);
+
+    {		
+			extern bool rtc_ui_get_alarm_status(void);
+
+			
+	    bool alarm_status;
+			alarm_status = 	rtc_ui_get_alarm_status();
+			if(alarm_status)
+			{
+				dis->show_icon(LED7_ALM);
+			}
+			
+		}
+		
 }
 
 static void led7_fm_show_station(void *hd, u32 arg)

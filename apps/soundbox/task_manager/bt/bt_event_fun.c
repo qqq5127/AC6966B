@@ -459,6 +459,7 @@ void spp_data_handler(u8 packet_type, u16 ch, u8 *packet, u16 size)
 /*----------------------------------------------------------------------------*/
 void bt_set_music_device_volume(int volume)
 {
+		u8 display_volume;
 #if (SMART_BOX_EN)
     extern bool smartbox_set_device_volume(int volume);
     if (smartbox_set_device_volume(volume)) {
@@ -467,7 +468,10 @@ void bt_set_music_device_volume(int volume)
 #endif
 
     if (true == app_check_curr_task(APP_BT_TASK)) {
+			
         set_music_device_volume(volume);
+    		display_volume = (volume + 1) / 8;
+				UI_SHOW_MENU(MENU_MAIN_VOL, 1000, display_volume, NULL);
     }
 }
 
@@ -1969,9 +1973,10 @@ void bt_status_avrcp_income_opid(struct bt_event *bt)
 #define AVC_VOLUME_DOWN			0x42
     log_debug("BT_STATUS_AVRCP_INCOME_OPID:%d\n", bt->value);
     if (bt->value == AVC_VOLUME_UP) {
-
+			log_info("avrcp up volume");
     }
     if (bt->value == AVC_VOLUME_DOWN) {
+			log_info("avrcp dowm volume");
 
     }
 }

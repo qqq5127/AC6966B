@@ -3,13 +3,24 @@
 #include "fm_emitter/fm_emitter_manage.h"
 
 #if (TCFG_UI_ENABLE&&(CONFIG_UI_STYLE == STYLE_JL_LED7))
+static void led7_show_power(void *hd)
+{
+    LCD_API *dis = (LCD_API *)hd;
+    dis->lock(1);
+    dis->clear();
+    dis->setXY(0, 0);
+    dis->show_string((u8 *)" OFF");
+    dis->lock(0);
+}
+
+
 static void led7_show_hi(void *hd)
 {
     LCD_API *dis = (LCD_API *)hd;
     dis->lock(1);
     dis->clear();
     dis->setXY(0, 0);
-    dis->show_string((u8 *)" HI");
+    //dis->show_string((u8 *)" HI");
     dis->lock(0);
 }
 
@@ -108,6 +119,9 @@ void ui_common(void *hd, void *private, u8 menu, u32 arg)//公共显示
     }
 
     switch (menu) {
+    case MENU_POWER:
+        led7_show_power(hd);
+        break;			
     case MENU_POWER_UP:
         led7_show_hi(hd);
         break;

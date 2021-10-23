@@ -81,7 +81,7 @@
  *和联合音量等级的数组大小 (combined_vol_list)关联
  *比如配置30，则表示0~30，总共31等级
  */
-#define MAX_COM_VOL             (30)
+#define MAX_COM_VOL             (15)
 
 /*
  *[数字音量]最大等级配置

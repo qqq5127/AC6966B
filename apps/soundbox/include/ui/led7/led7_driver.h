@@ -24,6 +24,9 @@ typedef struct _led7_VAR {
 #define LED7_BT 		BIT(10) 	//10: 充电图标
 #define LED7_AUX 		BIT(11)  	//11: AUX图标
 #define LED7_WMA 		BIT(12) 	//12: WMA图标
+#define LED7_ALM 		BIT(13) 	//13: ALM图标
+#define	LED_BATTERY_NORMAL BIT(14)
+#define	LED_BATTERY_LOW BIT(15)
 
 typedef u32 UI_LED7_ICON;
 
