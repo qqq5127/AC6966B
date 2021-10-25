@@ -8,7 +8,7 @@
 
 #if TCFG_APP_RTC_EN
 #ifdef  RTC_ALM_EN
-/* #define ALARM_DEBUG_EN */
+#define ALARM_DEBUG_EN
 #ifdef ALARM_DEBUG_EN
 #define alarm_printf        printf
 #define alarm_putchar       putchar
@@ -777,16 +777,16 @@ void alarm_update_info_after_isr(void)
     alarm_cur_active = alarm_map.active_map;
     for (i = 0; i < M_MAX_ALARM_NUMS; i++) {
         if (alarm_map.active_map & BIT(i)) {
-            if (alarm_tab[i].mode != 0) {
+            //if (alarm_tab[i].mode != 0) {
                 //闹钟不只响一次
                 //计算一次闹钟的时间
                 alarm_calc_real_time_by_index(&time, i);
-            } else {
-                //闹钟只响一次
-                alarm_map.map_sw &= ~BIT(i);
-                alarm_tab[i].sw = 0;
-                alarm_vm_write_info_by_index(&alarm_map, i);
-            }
+            //} else {
+            //    //闹钟只响一次
+            //    alarm_map.map_sw &= ~BIT(i);
+            //    alarm_tab[i].sw = 0;
+            //    alarm_vm_write_info_by_index(&alarm_map, i);
+            //}
         }
     }
     local_irq_enable();
