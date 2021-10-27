@@ -518,8 +518,10 @@ void app_idle_task()
 				bt_mode_temp = APP_BT_TASK;	
       	syscfg_write(CFG_SYS_VOL, &bt_mode_temp, 1);
 			}
+			set_pa_mode(2);
 			
 			os_taskq_flush();
+			tone_play_with_callback_by_name(tone_table[IDEX_TONE_POWER_OFF], 1, NULL, (void *)IDEX_TONE_POWER_OFF);
 
 			delay2ms(1000);			
 			UI_SHOW_MENU(MENU_POWER_UP, 0, 0, NULL);
@@ -554,6 +556,11 @@ void app_idle_task()
             return;
         }
     }
+		set_pa_mode(2);
+		tone_play_with_callback_by_name(tone_table[IDEX_TONE_POWER_ON], 1, NULL, (void *)IDEX_TONE_POWER_ON);
+		//delay2ms(1000); 		
+
+
 		log_info("idle end");
 }
 

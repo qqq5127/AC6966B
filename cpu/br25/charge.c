@@ -152,7 +152,13 @@ void set_charge_online_flag(u8 flag)
 
 u8 get_charge_online_flag(void)
 {
-    return __this->charge_online_flag;
+#ifdef CHARGE_DETECT_PIN
+		extern u8 get_charge_status(void);
+
+    return get_charge_status();
+#else
+		return __this->charge_online_flag;
+#endif
 }
 
 

@@ -888,7 +888,9 @@ extern void set_sd_vdd_power(void);
 #ifdef PA_CONTROL_PIN
 extern void init_pa_mode(void);
 #endif
-
+#ifdef CHARGE_DETECT_PIN
+extern void init_charge_detect(void);
+#endif
 
 void uartSendInit();
 extern void alarm_init();
@@ -898,7 +900,7 @@ void board_init()
 #ifdef PA_CONTROL_PIN
 			init_pa_mode();
 #endif
-
+		init_charge_detect();
     board_power_init();
     adc_vbg_init();
     adc_init();
@@ -985,13 +987,15 @@ extern void dac_sniff_power_off(void);
 void board_set_soft_poweroff(void)
 {
     u32 porta_value = 0xffff;
-    u32 portb_value = 0xfffe;
+    u32 portb_value = 0xffff;
+    u32 portc_value = 0xffff;
 
 		log_info("board_set_soft_poweroff");
 
-    gpio_write(MIC_HW_IO, 0);
+    //gpio_write(MIC_HW_IO, 0);
 
     key_wakeup_enable();
+
     gpio_dir(GPIOA, 0, 16, porta_value, GPIO_OR);
     gpio_set_pu(GPIOA, 0, 16, ~porta_value, GPIO_AND);
     gpio_set_pd(GPIOA, 0, 16, ~porta_value, GPIO_AND);
@@ -999,11 +1003,19 @@ void board_set_soft_poweroff(void)
     gpio_dieh(GPIOA, 0, 16, ~porta_value, GPIO_AND);
 
     //保留长按Reset Pin - PB1
-    gpio_dir(GPIOB, 1, 15, portb_value, GPIO_OR);
-    gpio_set_pu(GPIOB, 1, 15, ~portb_value, GPIO_AND);
-    gpio_set_pd(GPIOB, 1, 15, ~portb_value, GPIO_AND);
-    gpio_die(GPIOB, 1, 15, ~portb_value, GPIO_AND);
-    gpio_dieh(GPIOB, 1, 15, ~portb_value, GPIO_AND);
+    portb_value &= ~(BIT(1)|BIT(6));
+    gpio_dir(GPIOB, 0, 16, portb_value, GPIO_OR);
+    gpio_set_pu(GPIOB, 0, 16, ~portb_value, GPIO_AND);
+    gpio_set_pd(GPIOB, 0, 16, ~portb_value, GPIO_AND);
+    gpio_die(GPIOB, 0, 16, ~portb_value, GPIO_AND);
+    gpio_dieh(GPIOB, 0, 16, ~portb_value, GPIO_AND);
+
+
+    gpio_dir(GPIOC, 0, 16, portc_value, GPIO_OR);
+    gpio_set_pu(GPIOC, 0, 16, ~portc_value, GPIO_AND);
+    gpio_set_pd(GPIOC, 0, 16, ~portc_value, GPIO_AND);
+    gpio_die(GPIOC, 0, 16, ~portc_value, GPIO_AND);
+    gpio_dieh(GPIOC, 0, 16, ~portc_value, GPIO_AND);
 
     gpio_set_pull_up(IO_PORT_DP, 0);
     gpio_set_pull_down(IO_PORT_DP, 0);
@@ -1016,6 +1028,13 @@ void board_set_soft_poweroff(void)
     gpio_set_direction(IO_PORT_DM, 1);
     gpio_set_die(IO_PORT_DM, 0);
     gpio_set_dieh(IO_PORT_DM, 0);
+
+		//mute pa
+		gpio_set_direction(PA_CONTROL_PIN, 0);
+		gpio_set_pull_down(PA_CONTROL_PIN,0);
+		gpio_set_pull_up(PA_CONTROL_PIN,0);
+		gpio_set_die(PA_CONTROL_PIN, 0);
+		gpio_direction_output(PA_CONTROL_PIN, 1);
 
     VDDIOW_VOL_SEL(power_param.vddiow_lev);
 #if (TCFG_SD0_ENABLE || TCFG_SD1_ENABLE)
@@ -1119,6 +1138,21 @@ static void board_power_wakeup_init(void)
     }
 #endif
 }
+
+#ifdef CHARGE_DETECT_PIN
+void init_charge_detect(void)
+{
+	gpio_set_direction(CHARGE_DETECT_PIN, 1);
+	gpio_set_pull_down(CHARGE_DETECT_PIN,1);
+	gpio_set_pull_up(CHARGE_DETECT_PIN,0);
+	gpio_set_die(CHARGE_DETECT_PIN, 0);
+}
+
+u8 get_charge_status(void)
+{
+	return gpio_read(CHARGE_DETECT_PIN);
+}
+#endif
 
 
 #ifdef PA_CONTROL_PIN
